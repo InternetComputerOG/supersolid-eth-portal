@@ -1,0 +1,2 @@
+type DEMO = service {};
+service : DEMO

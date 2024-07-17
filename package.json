@@ -1,0 +1,19 @@
+{
+  "name": "supersolid_eth_portal",
+  "version": "1.0.0",
+  "description": "A demo of project Supersolid",
+  "keywords": [
+    "Internet Computer",
+    "Motoko",
+    "Svelte",
+    "Canister",
+    "Internet Identity"
+  ],
+  "scripts": {
+    "build": "cd src/frontend && npm run build",
+    "prebuild": "npm run copy:types",
+    "dev": "cd src/frontend && npm run dev",
+    "prestart": "npm run copy:types",
+    "copy:types": "rsync -avr .dfx/$(echo ${DFX_NETWORK:-'**'})/canisters/** --exclude='assets/' --exclude='idl/' --exclude='*.wasm' --delete src/declarations"
+  }
+}
