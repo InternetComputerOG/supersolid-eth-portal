@@ -56,7 +56,11 @@ shared actor class DEMO() = this {
     Helpers.hex_to_nat64(t);
   };
 
-  public func get_request_hex(destination_chain : Nat64, destination_address : Text, eth_amount : Float) : async Hex.Hex {
+  public func get_request_hex(
+      destination_chain : Nat64, 
+      destination_address : Text, 
+      eth_amount : Float
+    ) : async Hex.Hex {
     let chain = Helpers.nat64_to_hex(destination_chain);
     let recipient = Text.trimStart(Text.toLowercase(destination_address), #text "0x");
     let amount = Helpers.nat64_to_hex(Int64.toNat64(Float.toInt64(Float.mul(eth_amount, Float.pow(10, 18)))));
@@ -80,15 +84,28 @@ shared actor class DEMO() = this {
     await _get_requests();
   };
 
-  public func turn_on() : async T.BalancesResult {
-    let balances = await _update_balances();
-    request_timer := Timer.recurringTimer<system>(request_timer_period, _process_requests);
-    balances;
+  public func process_requests() : async () {
+    await _process_requests();
   };
+
+  // public func turn_on() : async T.BalancesResult {
+  //   let balances = await _update_balances();
+  //   request_timer := Timer.recurringTimer<system>(request_timer_period, _process_requests);
+  //   balances;
+  // };
 
   public func turn_off() : async T.BalancesResult {
     Timer.cancelTimer(request_timer);
     await _update_balances();
+  };
+
+  public func check_index() : async Nat {
+    request_index;
+  };
+
+  public func change_index(i : Nat) : async Nat {
+    request_index := i;
+    return request_index;
   };
 
   //  ----------- Directly called private functions
@@ -117,27 +134,17 @@ shared actor class DEMO() = this {
             await _reimburse_eth(r.caller, "Insufficient protocol liquity on destination chain", request);
           };
           case (true) {
-
-            switch (request.destination_chain) {
-              case (42161) {
-                arb_bal := arb_bal - request.eth_amount;
-                await _send_eth(r.caller, request);
-              };
-              case (8453) {
-                base_bal := base_bal - request.eth_amount;
-                await _send_eth(r.caller, request);
-              };
-              case _ {
-                await _reimburse_eth(r.caller, "destination chain not recognized", request);
-              };
-            };
+            await _send_eth(r.caller, request);
           };
         };
       };
     };
   };
 
-  private func _send_eth(caller : Text, r : T.Request) : async () {
+  private func _send_eth(
+      caller : Text, 
+      r : T.Request
+    ) : async () {
     switch (r.destination_chain) {
       case (42161) {
         let result = await S.send_request(r.destination_chain, r.destination_address, "", Nat64.toNat(r.eth_amount));
@@ -146,16 +153,26 @@ shared actor class DEMO() = this {
           case (#Err(e)) {
             _log_error(caller, ?r, "Destination send_request failed", false);
           };
-          case (#Ok({})) {
+          case (#Ok) {
             arb_bal := arb_bal - r.eth_amount;
+            base_bal := base_bal + r.eth_amount;
             _log_swap(caller, r);
           };
         };
-        
       };
       case (8453) {
-        
-        base_bal := base_bal - r.eth_amount;
+        let result = await S.send_request(r.destination_chain, r.destination_address, "", Nat64.toNat(r.eth_amount));
+
+        switch (result) {
+          case (#Err(e)) {
+            _log_error(caller, ?r, "Destination send_request failed", false);
+          };
+          case (#Ok) {
+            base_bal := base_bal - r.eth_amount;
+            arb_bal := arb_bal + r.eth_amount;
+            _log_swap(caller, r);
+          };
+        };
       };
       case _ {
         await _reimburse_eth(caller, "Destination chain not compatible", r);
@@ -163,7 +180,11 @@ shared actor class DEMO() = this {
     };
   };
 
-  private func _reimburse_eth(caller : Text, reason : Text, request : T.Request ) : async () {
+  private func _reimburse_eth(
+      caller : Text, 
+      reason : Text, 
+      request : T.Request 
+    ) : async () {
     var destination : Nat64 = arb_id;
 
     if (request.destination_chain == arb_id) {
@@ -176,13 +197,16 @@ shared actor class DEMO() = this {
       case (#Err(e)) {
         _log_error(caller, ?request, reason # "- Reimbursement send_request failed", false);
       };
-      case (#Ok({})) {
+      case (#Ok) {
         _log_error(caller, ?request, reason, true);
       };
     };
   };
 
-  private func _log_swap(caller : Text, request : T.Request) {
+  private func _log_swap(
+      caller : Text,
+      request : T.Request
+    ) {
     let entry = {
       timestamp = Time.now();
       caller = caller;
@@ -194,7 +218,12 @@ shared actor class DEMO() = this {
     log.put(request_index, #Swap(entry));
   };
 
-  private func _log_error(caller : Text, request : ?T.Request, description : Text, reimbursed : Bool) {
+  private func _log_error(
+      caller : Text,
+      request : ?T.Request,
+      description : Text,
+      reimbursed : Bool
+    ) {
     let entry = {
       timestamp = Time.now();
       caller = caller;
@@ -209,20 +238,8 @@ shared actor class DEMO() = this {
   };
 
   private func _update_balances() : async T.BalancesResult {
-
-    switch (Helpers.hex_to_nat64(await S.get_user_balance(arb_id, null, null))) {
-      case (#err(e)) { return #err(e) };
-      case (#ok(b)) {
-        arb_bal := b;
-      };
-    };
-
-    switch (Helpers.hex_to_nat64(await S.get_user_balance(base_id, null, null))) {
-      case (#err(e)) { return #err(e) };
-      case (#ok(b)) {
-        base_bal := b;
-      };
-    };
+    arb_bal := await S.get_user_balance(arb_id, null, null);
+    base_bal := await S.get_user_balance(base_id, null, null);
 
     let balances = {
       arbitrum = arb_bal;

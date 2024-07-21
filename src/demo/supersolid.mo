@@ -8,6 +8,7 @@ module {
     };
   };
   public type JsonRpcError = { code : Int64; message : Text };
+  public type LedgerKey = { #HexAddress : Text; #IcPrincipal : Principal };
   public type ProviderError = {
     #TooFewCycles : { expected : Nat; received : Nat };
     #MissingRequiredProvider;
@@ -23,8 +24,15 @@ module {
     #SysFatal;
     #CanisterReject;
   };
-  public type Result = { #Ok : {}; #Err : RouterError };
-  public type RouterError = { #Rpc : RpcError; #Locked; #Unknown : Text };
+  public type Result = { #Ok; #Err : RouterError };
+  public type RouterError = {
+    #Locked;
+    #DecodingError : Text;
+    #Unknown : Text;
+    #RpcResponseError : RpcError;
+    #NonExistentValue;
+    #InsufficientFunds;
+  };
   public type RpcError = {
     #JsonRpcError : JsonRpcError;
     #ProviderError : ProviderError;
@@ -41,11 +49,13 @@ module {
     #InvalidHex : Text;
   };
   public type Self = actor {
-    add_request : shared (Text, Text) -> async ();
+    add_request : shared (Text, Text, Principal) -> async ();
     balance : shared query Nat64 -> async Text;
-    get_chain_ledger : shared query Nat64 -> async [(Text, [(?Text, Text)])];
-    get_user_balance : shared query (Nat64, ?Text, ?Text) -> async Text;
-    poll : shared () -> async ();
+    get_chain_ledger : shared query Nat64 -> async [
+        (LedgerKey, [(?Text, Text)])
+      ];
+    get_user_balance : shared query (Nat64, ?Text, ?LedgerKey) -> async Nat64;
+    poll_others_requests : shared query Principal -> async [ServiceRequest];
     poll_requests : shared query Nat64 -> async [ServiceRequest];
     public_key : shared query () -> async Text;
     send_request : shared (Nat64, Text, Text, Nat) -> async Result;

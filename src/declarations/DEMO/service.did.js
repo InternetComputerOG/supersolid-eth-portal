@@ -29,6 +29,8 @@ export const idlFactory = ({ IDL }) => {
   const Result = IDL.Variant({ 'ok' : IDL.Nat64, 'err' : IDL.Text });
   const ServiceRequest = IDL.Record({ 'data' : IDL.Text, 'caller' : IDL.Text });
   const DEMO = IDL.Service({
+    'change_index' : IDL.Func([IDL.Nat], [IDL.Nat], []),
+    'check_index' : IDL.Func([], [IDL.Nat], []),
     'decode_request_data' : IDL.Func([Hex], [Result_1], []),
     'get_balances' : IDL.Func([], [BalancesResult], []),
     'get_logs' : IDL.Func([], [IDL.Vec(IDL.Tuple(IDL.Nat, Entry))], []),
@@ -36,8 +38,8 @@ export const idlFactory = ({ IDL }) => {
     'hex_to_nat64' : IDL.Func([Hex], [Result], []),
     'nat64_to_hex' : IDL.Func([IDL.Nat64], [Hex], []),
     'poll_requests' : IDL.Func([], [IDL.Vec(ServiceRequest)], []),
+    'process_requests' : IDL.Func([], [], []),
     'turn_off' : IDL.Func([], [BalancesResult], []),
-    'turn_on' : IDL.Func([], [BalancesResult], []),
   });
   return DEMO;
 };

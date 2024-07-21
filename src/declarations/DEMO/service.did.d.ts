@@ -6,6 +6,8 @@ export interface Balances { 'arbitrum' : bigint, 'base' : bigint }
 export type BalancesResult = { 'ok' : Balances } |
   { 'err' : string };
 export interface DEMO {
+  'change_index' : ActorMethod<[bigint], bigint>,
+  'check_index' : ActorMethod<[], bigint>,
   'decode_request_data' : ActorMethod<[Hex], Result_1>,
   'get_balances' : ActorMethod<[], BalancesResult>,
   'get_logs' : ActorMethod<[], Array<[bigint, Entry]>>,
@@ -13,8 +15,8 @@ export interface DEMO {
   'hex_to_nat64' : ActorMethod<[Hex], Result>,
   'nat64_to_hex' : ActorMethod<[bigint], Hex>,
   'poll_requests' : ActorMethod<[], Array<ServiceRequest>>,
+  'process_requests' : ActorMethod<[], undefined>,
   'turn_off' : ActorMethod<[], BalancesResult>,
-  'turn_on' : ActorMethod<[], BalancesResult>,
 }
 export type Entry = { 'Error' : ErrorEntry } |
   { 'Swap' : SwapEntry };

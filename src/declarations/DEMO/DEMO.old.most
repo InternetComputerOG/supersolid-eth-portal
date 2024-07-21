@@ -1,8 +1,31 @@
 // Version: 1.0.0
+type Entry = {#Error : ErrorEntry; #Swap : SwapEntry};
+type ErrorEntry =
+  {
+    arb_remaining_balance : Nat64;
+    base_remaining_balance : Nat64;
+    caller : Text;
+    description : Text;
+    reimbursed : Bool;
+    request : ?Request;
+    timestamp : Time
+  };
+type Request =
+  {destination_address : Text; destination_chain : Nat64; eth_amount : Nat64};
+type SwapEntry =
+  {
+    arb_remaining_balance : Nat64;
+    base_remaining_balance : Nat64;
+    caller : Text;
+    request : Request;
+    timestamp : Time
+  };
+type Time = Int;
 actor {
   stable var arb_bal : Nat64;
   stable var base_bal : Nat64;
-  stable var check_jobs_period : {#nanoseconds : Nat; #seconds : Nat};
-  stable var job_index : Nat64;
-  stable var jobs_timer : Nat
+  stable var logEntries : [(Nat, Entry)];
+  stable var request_index : Nat;
+  stable var request_timer : Nat;
+  stable var request_timer_period : {#nanoseconds : Nat; #seconds : Nat}
 };
