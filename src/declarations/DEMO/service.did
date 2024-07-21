@@ -3,12 +3,23 @@ type BalancesResult = variant { ok : Balances; err : text };
 type DEMO = service {
   decode_request_data : (Hex) -> (Result_1);
   get_balances : () -> (BalancesResult);
+  get_logs : () -> (vec record { nat; Entry });
   get_request_hex : (nat64, text, float64) -> (Hex);
   hex_to_nat64 : (Hex) -> (Result);
   nat64_to_hex : (nat64) -> (Hex);
   poll_requests : () -> (vec ServiceRequest);
   turn_off : () -> (BalancesResult);
   turn_on : () -> (BalancesResult);
+};
+type Entry = variant { Error : ErrorEntry; Swap : SwapEntry };
+type ErrorEntry = record {
+  request : opt Request;
+  description : text;
+  base_remaining_balance : nat64;
+  timestamp : Time;
+  caller : text;
+  arb_remaining_balance : nat64;
+  reimbursed : bool;
 };
 type Hex = text;
 type Request = record {
@@ -19,4 +30,12 @@ type Request = record {
 type Result = variant { ok : nat64; err : text };
 type Result_1 = variant { ok : Request; err : text };
 type ServiceRequest = record { data : text; caller : text };
+type SwapEntry = record {
+  request : Request;
+  base_remaining_balance : nat64;
+  timestamp : Time;
+  caller : text;
+  arb_remaining_balance : nat64;
+};
+type Time = int;
 service : DEMO

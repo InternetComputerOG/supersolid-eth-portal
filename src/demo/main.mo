@@ -64,6 +64,10 @@ shared actor class DEMO() = this {
     return "0x" # chain # recipient # amount;
   };
 
+  public func get_logs() : async [(Nat, T.Entry)] {
+    Iter.toArray(log.entries());
+  };
+
   public func decode_request_data(h : Hex.Hex) : async Result.Result<T.Request, Text> {
     _decode_request_data(h)
   };
