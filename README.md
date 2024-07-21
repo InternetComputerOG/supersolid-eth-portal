@@ -52,4 +52,6 @@ It’ll remove one of the biggest barriers the Web3 industry faces using a solut
 
 # Resources:
 * Project Slide Deck: https://docs.google.com/presentation/d/1VXE3LvFynphkO_k2vxPYf4KOOHg6rs7I63BZxFqCCEs/edit?usp=sharing
-* Project Presentation Video:
+* Supersolid 1.0 proof-of-concept Repo: https://github.com/EmperorOrokuSaki/supersolid/
+* ETH-portal Demo Dapp Repo: https://github.com/InternetComputerOG/supersolid-eth-portal
+* Project Presentation Video: (coming soon)
