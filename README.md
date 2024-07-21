@@ -8,7 +8,7 @@ Supersolid is a "meta-ledger" that makes it possible for users & smart contracts
 
 # How does it work?
 ## Components:
-* *Virtual Balance "Meta-Ledger"* - A canister controls user accounts on multiple chains and all assets are held communally in these accounts. The canister keeps an internal ledger of which accounts own balances within these Supersolid accounts.
+* *Virtual Balance "Meta-Ledger"* - A canister controls user accounts on multiple chains and all assets are held communally in these accounts. The canister keeps an internal ledger of which external users and smart contract accounts own "virtual balances" within the Supersolid accounts.
 * *Relay Interface* - Native transactions sent to Supersolid accounts can contain commands. These commands can be relayed to smart contracts on any chain for simple cross-chain logic & data availability.
 
 ## Key concepts:
@@ -20,6 +20,17 @@ Supersolid is a "meta-ledger" that makes it possible for users & smart contracts
 2. Assets received by a transaction get added to the meta-ledger as “virtual balance” owned by the sender. The transaction may also contain commands in the memo field if the user was intending to do something with this balance right away.
 3. An interpreter reads commands (if present) in the memo field of any transactions.
 4. Any commands which need to be relayed are queried by integrated dapps or sent out as transactions as needed to a destination chain.
+
+## Use cases
+Supersolid makes it trivial for devs on any chain to create fully decentralized & secure cross-chain dapps which are hard to build today:
+* Cross-chain pools for swaps & transfers.
+* Cross-chain aggregators.
+* Fractionalized ETH Mainnet transactions.
+* Such as fractionalizing ownership of an Ethereum Liquity Trove into tokens on Solana.
+* Crypto index funds (portfolio-backed tokens).
+* Automated flashloan bots.
+* Backed leverage tokens.
+* Gasless virtual balance transfers & non-native wallets for smart contracts.
 
 # What Supersolid makes possible
 * Any user or smart contract from any chain can use Supersolid to do a transaction with any user or smart contract on any other chain. For example, using a native BTC transaction to open a Liquity Trove on Ethereum mainnet.
