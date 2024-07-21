@@ -6,6 +6,12 @@ We wanted to use real Web3 assets on mainnet chains to prove the viability of Su
 # What is Supersolid?
 Supersolid is a "meta-ledger" that makes it possible for users & smart contracts from any chain to natively transact with users & smart contracts on any other chain!
 
+# Resources:
+* Project Presentation Video: https://drive.google.com/file/d/1mVkT1w5sEyQh7Gz_8_gE-I0wx4-_lFg4/view?usp=sharing
+* Project Slide Deck: https://docs.google.com/presentation/d/1VXE3LvFynphkO_k2vxPYf4KOOHg6rs7I63BZxFqCCEs/edit?usp=sharing
+* Supersolid 1.0 proof-of-concept Repo: https://github.com/EmperorOrokuSaki/supersolid/
+* ETH-portal Demo Dapp Repo: https://github.com/InternetComputerOG/supersolid-eth-portal
+
 # How does it work?
 ## Components:
 * *Virtual Balance "Meta-Ledger"* - A canister controls user accounts on multiple chains and all assets are held communally in these accounts. The canister keeps an internal ledger of which external users and smart contract accounts own "virtual balances" within the Supersolid accounts.
@@ -60,9 +66,3 @@ It disrupts many of the top projects within the Interoperability category (MC: ~
 
 ## Utility for the ICP Ecosystem
 It’ll remove one of the biggest barriers the Web3 industry faces using a solution that perfectly highlights the unique capabilities of ICP, while also giving every canister direct access to universally composable multi-chain liquidity.
-
-# Resources:
-* Project Slide Deck: https://docs.google.com/presentation/d/1VXE3LvFynphkO_k2vxPYf4KOOHg6rs7I63BZxFqCCEs/edit?usp=sharing
-* Supersolid 1.0 proof-of-concept Repo: https://github.com/EmperorOrokuSaki/supersolid/
-* ETH-portal Demo Dapp Repo: https://github.com/InternetComputerOG/supersolid-eth-portal
-* Project Presentation Video: (coming soon)
