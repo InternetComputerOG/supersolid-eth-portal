@@ -1,14 +1,45 @@
 import Bool         "mo:base/Bool";
-import Blob         "mo:base/Blob";
-import Float        "mo:base/Float";
-import Nat32        "mo:base/Nat32";
 import Nat64        "mo:base/Nat64";
-import Principal    "mo:base/Principal";
 import Text         "mo:base/Text";
 import Time         "mo:base/Time";
-import Hex          "lib/Hex";
+import Result       "mo:base/Result";
 
 module {
+  public type BalancesResult = Result.Result<Balances, Text>;
+
+  public type Balances = {
+    arbitrum : Nat64;
+    base : Nat64;
+  };
+
+  public type Request = {
+    destination_chain : Nat64;
+    destination_address : Text;
+    eth_amount : Nat64;
+  };
+
+  public type Entry = {
+    #Error : ErrorEntry;
+    #Swap : SwapEntry;
+  };
+
+  public type ErrorEntry = {
+    timestamp : Time.Time;
+    caller : Text;
+    request : ?Request;
+    description : Text;
+    reimbursed : Bool;
+    arb_remaining_balance : Nat64;
+    base_remaining_balance : Nat64;
+  };
+
+  public type SwapEntry = {
+    timestamp : Time.Time;
+    caller : Text;
+    request : Request;
+    arb_remaining_balance : Nat64;
+    base_remaining_balance : Nat64;
+  };
   
   //  ----------- State
   

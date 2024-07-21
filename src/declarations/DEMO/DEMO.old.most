@@ -1,0 +1,8 @@
+// Version: 1.0.0
+actor {
+  stable var arb_bal : Nat64;
+  stable var base_bal : Nat64;
+  stable var check_jobs_period : {#nanoseconds : Nat; #seconds : Nat};
+  stable var job_index : Nat64;
+  stable var jobs_timer : Nat
+};

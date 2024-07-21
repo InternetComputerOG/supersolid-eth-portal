@@ -1,0 +1,40 @@
+type ServiceRequest = 
+ record {
+   caller: text;
+   data: text;
+ };
+type Result_1 = 
+ variant {
+   err: text;
+   ok: record {
+         nat64;
+         text;
+         nat64;
+       };
+ };
+type Result = 
+ variant {
+   err: text;
+   ok: nat64;
+ };
+type Hex = text;
+type BalancesResult = 
+ variant {
+   err: text;
+   ok: Balances;
+ };
+type Balances = 
+ record {
+   arbitrum: nat64;
+   base: nat64;
+ };
+service : {
+  decode_command_hex: (Hex) -> (Result_1);
+  get_balances: () -> (BalancesResult);
+  get_command_hex: (nat64, text, float64) -> (Hex);
+  hex_to_nat64: (Hex) -> (Result);
+  nat64_to_hex: (nat64) -> (Hex);
+  poll_requests: () -> (vec ServiceRequest);
+  turn_off: () -> (BalancesResult);
+  turn_on: () -> (BalancesResult);
+}
